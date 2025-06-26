@@ -1,13 +1,11 @@
 # backend/market_data_client.py
 import grpc.aio
-from .market_data_pb2_generated import market_data_pb2 as pb2 # Unused now directly here
+from .market_data_pb2_generated import market_data_pb2 as pb2
 from .market_data_pb2_generated import market_data_pb2_grpc as pb2_grpc
 import asyncio
 import grpc
 import random, time
-
-# IMPORT THE NEW ClientOrderBook from the model file
-from .market_data_model import ClientOrderBook # <--- NEW IMPORT
+from .market_data_model import ClientOrderBook
 
 SERVER_ADDRESS = 'localhost:50051'
 
@@ -55,7 +53,7 @@ async def subscribe_to_market_data(instrument_id: str):
             print(f"CLI Client for {instrument_id}: An unexpected error occurred in client stream: {e}")
 
 async def main():
-    # Make sure this list matches SIMULATED_INSTRUMENTS in your server for full testing
+    # Make sure this list matches SIMULATED_INSTRUMENTS in the server for full testing
     instruments_to_subscribe = ["BTC_USD","ETH_USD","XRP_USD","LTC_USD","BCH_USD","SOL_USD","ADA_USD",
                                  "AVAX_USD","DOT_USD","DOGE_USD","MATIC_USD","SHIB_USD","LINK_USD","XLM_USD",
                                  "TRX_USD","NEAR_USD","ETC_USD","FIL_USD","APT_USD","ARB_USD","SUI_USD",

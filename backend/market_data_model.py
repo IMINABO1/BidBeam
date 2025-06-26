@@ -22,7 +22,7 @@ class ClientOrderBook:
     # Note: For apply_snapshot and apply_update, you'll need to pass the protobuf messages
     # as arguments. I'll include type hints assuming you pass the raw protobuf objects.
     # If you prefer to pass parsed dicts, you can adjust the methods.
-    # For now, I'll keep them expecting the pb2 objects for direct compatibility.
+    # For now, I'll keep using pb2 objects for direct compatibility.
 
     def apply_snapshot(self, snapshot): # type: (Any) -> None # Using Any for protobuf for simplicity here
         """
