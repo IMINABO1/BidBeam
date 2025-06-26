@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package marketdata;
+
+//for orders
+message Order{
+    int64 order_id = 1;
+    double price = 2;
+    int32 quantity = 3;
+    bool side = 4;
+    string order_type = 5;
+    double timestamp = 6;
+}
+
+// for trades
+message Trade {
+    int64 buy_order_id = 1;
+    int64 sell_order_id = 2;
+    double price = 3;
+    int32 quantity = 4;
+    double timestamp = 5;
+}
+
+//for orderbook level
+message OrderBookLevel{
+    double price = 1;
+    int32 quantity = 2;
+}
+
+//for order book
+message OrderBookSnapshot{
+    string instrument_id = 1;
+    repeated OrderBookLevel bids = 2; // sorted in decending order highest bid first
+    repeated OrderBookLevel asks = 3; // sorted in ascending order
+    double timestamp = 4;
+}
+
+// This is more efficient for continuous updates.
+message OrderBookUpdate {
+  string instrument_id = 1;
+  double price = 2;
+  int32 quantity = 3; // New quantity at this price level. 0 means level removed.
+  bool side = 4; // "BUY" or "SELL"
+  double timestamp = 5; // Timestamp of the update
+}
+
+// Request to subscribe to market data for a specific instrument.
+message SubscriptionRequest {
+  string instrument_id = 1;
+}
+
+// The stream of market data messages the server sends to the client.
+message MarketDataResponse {
+  // Use oneof to send either a snapshot or an incremental update
+  oneof msg_type {
+    OrderBookSnapshot snapshot = 1;
+    OrderBookUpdate update = 2;
+  }
+}
+
+
+// Service definition for market data.
+service MarketDataService {
+  // A server-streaming RPC. Client sends one request, server sends a stream of responses.
+  // The first message will be a snapshot, followed by incremental updates.
+  rpc SubscribeMarketData (SubscriptionRequest) returns (stream MarketDataResponse) {}
+}
